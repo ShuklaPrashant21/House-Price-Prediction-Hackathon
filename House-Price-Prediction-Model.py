@@ -14,8 +14,7 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
     for filename in filenames:
         print(os.path.join(dirname, filename))
 
-# You can write up to 5GB to the current directory (/kaggle/working/) that gets preserved as output when you create a version using "Save & Run All" 
-
+        
 import seaborn as sns
 import warnings 
 import matplotlib.pyplot as plt
