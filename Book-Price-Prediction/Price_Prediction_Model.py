@@ -1,5 +1,3 @@
-# import libraries
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -31,44 +29,16 @@ df = pd.concat([train_copy, test_copy], axis=0,sort=False)
 ## Remove title column from data set because it is not necessary in model development.
 df.drop(columns ='Title', axis=1, inplace =True)
 
-df.drop(columns=['Synopsis', 'Author','Genre'], axis=1, inplace=True)
+df.drop(columns=['Synopsis', 'Author','Genre','Edition'], axis=1, inplace=True)
 
 ## Feature Engineering
 
-## Extract reviews in numeric form 
-df['Reviews(out_of_5)'] = df['Reviews'].str[:3]
-## Make column numeric
-df['Reviews(out_of_5)'] = pd.to_numeric(df["Reviews(out_of_5)"]) 
-## drop reviews column
-df.drop(['Reviews'],axis=1, inplace=True)
+## Extract Reviews and Ratings in numeric datatype.
 
-df['Edition_date'] = df['Edition'].str[-11:]
-df['Edition_date'].head(5)
-
-## Extract ratings in numeric form 
-df['Ratings_count'] = df['Ratings'].str[:2]
-
-import re
-df['Ratings_count'] = df['Ratings'].str.replace(r'[^\d.]+', '')
-
-## Make column data type numeric
-df['Ratings_count'] = pd.to_numeric(df['Ratings_count'])
-
-## Drop Ratings column
-df.drop(['Ratings'], axis=1, inplace=True)
-
-## Drop Edition column in dataframe.
-df.drop(['Edition'], axis=1, inplace=True)
+df['Reviews'] = df.Reviews.apply(lambda r: float(r.split()[0]))
+df['Ratings']= df.Ratings.str.extract('(\d+)')
+df["Ratings"] = df.Ratings.astype(float)
 df.head()
-
-df["Year"] = df["Edition_date"].str[-4:]
-#df["Year"] = df["Year"].astype('int32')
-df['Year'] = pd.to_numeric(df['Year'], errors='coerce') 
-
-## Drop irrelevant values in year column other than year 
-df.dropna(subset=['Year'], inplace=True)
-df.info()
-## Their is no need to add month column because there is almost equal number of books releasing on each month.
 
 ## Drop outliers in price column 
 df.drop(df['Price'] > 9000, axis=0, inplace=True)
